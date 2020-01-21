@@ -1,0 +1,23 @@
+clc
+clear
+close all
+%% input arguments
+SR=0.1;
+img=imread('lena.bmp');
+%% ket augmentation--covert original(low-order) tensor to high-order tensor
+siz=size(img);
+img=double(img);
+I=[2*ones(1,16) 3];
+order=[1 9 2 10 3 11 4 12 5 13 6 14 7 15 8 16 17];
+J=[4*ones(1,8) 3];
+tnsr=l2h(img,I,order,J);
+%% sampling
+P=sampling_uniform(img,SR);
+P=l2h(P,I,order,J);
+%% solve
+% [~,ranktube]=SVD_MPS_Rank_Estimation(P.*img,1e-2);
+% x=SiLRTC_TT(img,find(P),ranktube,0.01*ranktube,500,1e-5);
+[x,RC,RE,run_time]=TR_ADMM(tnsr,P,4/norm(P(:).*tnsr(:)),true);%3.7 for lena
+%% deaugmentation--covert high-order tensor to original(low-order) tensor
+x=h2l(x,I,order,siz);
+PSNR=psnr(uint8(x),uint8(img))
