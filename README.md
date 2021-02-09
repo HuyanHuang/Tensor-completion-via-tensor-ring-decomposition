@@ -1,4 +1,4 @@
-# tensor-completion-via-tensor-ring-decomposition
+# Tensor-completion-via-tensor-ring-decomposition
 This project aims to realize the tensor completion algorithms via tensor ring decomposition.
 
 If you have used this code, please cite:
